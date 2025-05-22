@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   checkIfWalletIsConnect,
-  connectMetamask,
+  handleWalletConnect,
 } from "../Utils/connectMetamask";
 import {
   createCampaign,
@@ -16,15 +16,13 @@ export const MainContext = createContext();
 export const MainProvider = ({ children }) => {
   const [account, setAccount] = useState("");
 
-  // connect to metamask
   const connectMetamaskWithAccount = async () => {
-    const { provider } = await connectMetamask();
-    const accounts = await provider.send("eth_requestAccounts", []);
-    setAccount(accounts[0]);
-    window.location.reload();
+    const success = await handleWalletConnect(setAccount);
+    if (success) {
+      window.location.reload();
+    }
   };
 
-  // check if wallet is connect
   useEffect(() => {
     checkIfWalletIsConnect(setAccount);
   }, [setAccount]);

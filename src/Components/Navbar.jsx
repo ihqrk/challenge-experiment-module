@@ -4,12 +4,21 @@ import { Link, useLocation } from "react-router-dom";
 import { LiaTimesSolid } from "react-icons/lia";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { MainContext } from "../Context/MainContext";
+import { isMetamaskInstalled, installMetamask } from "../Utils/connectMetamask";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   const { connectMetamaskWithAccount, account } = useContext(MainContext);
+
+  const handleWalletButtonClick = () => {
+    if (isMetamaskInstalled()) {
+      connectMetamaskWithAccount();
+    } else {
+      installMetamask();
+    }
+  };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -60,9 +69,9 @@ const Navbar = () => {
             ) : (
               <button
                 className="inline-flex items-center py-2 px-4 bg-lime-500 text-white font-medium text-sm rounded-full hover:bg-lime-600 transition-colors duration-300"
-                onClick={connectMetamaskWithAccount}
+                onClick={handleWalletButtonClick}
               >
-                Connect wallet
+                {isMetamaskInstalled() ? "Connect Wallet" : "Install Metamask"}
               </button>
             )}
           </div>
@@ -110,9 +119,9 @@ const Navbar = () => {
           {!account && (
             <button
               className="inline-flex items-center py-2 px-4 bg-lime-500 text-white font-medium text-sm rounded-full hover:bg-lime-600 transition-colors duration-300"
-              onClick={connectMetamaskWithAccount}
+              onClick={handleWalletButtonClick}
             >
-              Connect wallet
+              {isMetamaskInstalled() ? "Connect Wallet" : "Install Metamask"}
             </button>
           )}
         </div>
